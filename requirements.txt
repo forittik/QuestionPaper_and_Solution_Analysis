@@ -5,6 +5,5 @@ google-generativeai
 openai
 pandas
 torch
-textwrap
 markdown
 Pillow
