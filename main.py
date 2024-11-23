@@ -19,7 +19,7 @@ def main():
 
         # Check if the directory exists, if not, create it
         if not os.path.exists(pdf_directory):
-            os.makedirs(pdf_directory)
+            os.makedirs(pdf_directory, exist_ok=True)  # Avoid FileExistsError
 
         # Define file paths for saving uploaded PDFs
         question_pdf_path = f"{pdf_directory}{question_pdf.name}"
