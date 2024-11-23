@@ -4,3 +4,4 @@ pillow
 google-generativeai
 openai
 pandas
+PyMuPDF==1.22.5
