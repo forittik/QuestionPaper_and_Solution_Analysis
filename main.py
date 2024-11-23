@@ -1,10 +1,11 @@
+import os
 import streamlit as st
 import pathlib
-import os  # Import os module
 from utils.pdf_to_image import pdf_page_to_jpeg
 from utils.image_processing import process_image
 from utils.api_helpers import configure_google_api, configure_openai_api
 from utils.data_helpers import generate_student_responses, compare_answers, extract_solution_list
+import genai  # Ensure genai module is imported for the GenerativeModel
 
 def main():
     st.title("JEE Exam Preparation - Question and Solution Processing")
@@ -17,9 +18,16 @@ def main():
         # Define the directory for saving PDFs
         pdf_directory = "data/PDFs/"
 
-        # Check if the directory exists, if not, create it
-        if not os.path.exists(pdf_directory):
-            os.makedirs(pdf_directory, exist_ok=True)  # Avoid FileExistsError
+        # Check if 'PDFs' is a file, and if so, remove it
+        if os.path.exists(pdf_directory):
+            if os.path.isfile(pdf_directory):
+                os.remove(pdf_directory)  # Remove the file if it's a file, not a directory
+            elif not os.path.isdir(pdf_directory):
+                # In case it's neither a file nor a directory, handle the error
+                st.error(f"Unexpected path: {pdf_directory} exists but is neither a file nor a directory.")
+                return
+        # Create the directory if it doesn't exist
+        os.makedirs(pdf_directory, exist_ok=True)
 
         # Define file paths for saving uploaded PDFs
         question_pdf_path = f"{pdf_directory}{question_pdf.name}"
@@ -39,10 +47,15 @@ def main():
         pdf_page_to_jpeg(question_pdf_path, output_dir_questions, [0, 1, 2])  # Example pages
         pdf_page_to_jpeg(solution_pdf_path, output_dir_solutions, [0, 1, 2])
 
-        # Process images
-        configure_google_api(st.text_input("Google API Key"))
-        configure_openai_api(st.text_input("OpenAI API Key"))
+        # Use API keys from Streamlit secrets
+        google_api_key = st.secrets["google_api"]["api_key"]  # Replace with correct key from secrets.toml
+        openai_api_key = st.secrets["openai_api"]["api_key"]  # Replace with correct key from secrets.toml
         
+        # Configure APIs using the keys from secrets
+        configure_google_api(google_api_key)
+        configure_openai_api(openai_api_key)
+        
+        # Initialize the generative model
         model = genai.GenerativeModel('gemini-1.5-pro-latest')
         
         output_text = ""
