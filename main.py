@@ -138,14 +138,47 @@ def main():
     if not install_dependencies():
         return
         
-    # Check Poppler installation
-    poppler_installed, install_instructions = check_poppler_installation()
-    if not poppler_installed:
-        st.error("Poppler is not installed or not found in PATH")
-        st.markdown(install_instructions)
+    # Check Poppler installation with better error handling
+    try:
+        poppler_installed, install_instructions = check_poppler_installation()
+        if not poppler_installed:
+            st.error("Poppler is not installed or not found in PATH")
+            st.markdown(install_instructions)
+            
+            # Add deployment-specific instructions
+            st.markdown("""
+            ### For Streamlit Cloud Deployment:
+            If you're seeing this error on Streamlit Cloud:
+            1. Make sure you have a `packages.txt` file in your repository root
+            2. The file should contain: `poppler-utils`
+            3. Redeploy your application
+            """)
+            st.stop()
+            return
+    except Exception as e:
+        st.error(f"Error checking Poppler installation: {str(e)}")
         st.stop()
         return
 
+    # API Configuration
+    with st.sidebar:
+        st.header("API Configuration")
+        use_secrets = st.checkbox("Use secrets.toml configuration", value=True)
+        
+        if use_secrets:
+            try:
+                google_api_key = st.secrets["google_api"]["api_key"]
+                openai_api_key = st.secrets["openai_api"]["api_key"]
+            except Exception:
+                st.error("secrets.toml file not found or missing API keys.")
+                st.stop()
+        else:
+            google_api_key = st.text_input("Enter Google API Key", type="password")
+            openai_api_key = st.text_input("Enter OpenAI API Key", type="password")
+            
+            if not google_api_key or not openai_api_key:
+                st.warning("Please enter both API keys to continue.")
+                st.stop()
     # Rest of your existing main() function code remains the same...
     # (Previous code for API configuration, file upload, and processing)
 
