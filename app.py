@@ -1,43 +1,38 @@
 import streamlit as st
-from utils.pdf_to_image import pdf_to_jpeg
-from utils.image_processing import process_image
+from utils.pdf_to_image import pdf_to_images
+from utils.image_processing import process_images
 from utils.api_helpers import call_google_model, call_openai_model
-from utils.data_helpers import compare_answers, generate_student_responses
-import os
-from utils.pdf_to_image import pdf_to_jpeg
+from utils.data_helpers import compare_answers
 
-st.title("Question Paper & Solution Analysis")
+# Title and description
+st.title("Question Paper and Solution Analysis")
+st.write("Upload question paper and solution PDFs to analyze and compare!")
 
-# File inputs for question paper and solution PDFs
-question_pdf = st.file_uploader("Upload Question Paper PDF", type="pdf")
-solution_pdf = st.file_uploader("Upload Solution PDF", type="pdf")
+# File upload
+question_pdf = st.file_uploader("Upload Question Paper PDF", type=["pdf"])
+solution_pdf = st.file_uploader("Upload Solution PDF", type=["pdf"])
 
 if question_pdf and solution_pdf:
-    # Save PDFs locally
-    question_pdf_path = f"data/question_paper.pdf"
-    solution_pdf_path = f"data/solution.pdf"
-
-    with open(question_pdf_path, "wb") as f:
-        f.write(question_pdf.getbuffer())
-    with open(solution_pdf_path, "wb") as f:
-        f.write(solution_pdf.getbuffer())
-
     # Convert PDFs to images
     st.write("Converting PDFs to images...")
-    question_images = pdf_to_jpeg(question_pdf_path, "data/question_images")
-    solution_images = pdf_to_jpeg(solution_pdf_path, "data/solution_images")
+    question_images = pdf_to_images(question_pdf)
+    solution_images = pdf_to_images(solution_pdf)
 
-    st.write("Processing images...")
-    processed_data = []
-    for img_path in question_images:
-        result = process_image(img_path, api="google")
-        processed_data.append(result)
+    # Process images using AI models
+    st.write("Processing images with AI models...")
+    question_data = process_images(question_images)
+    solution_data = process_images(solution_images)
 
-    # Generate and compare answers
-    st.write("Generating and comparing answers...")
-    student_responses = generate_student_responses(processed_data)
-    st.json(student_responses)
+    # Compare answers
+    st.write("Comparing question paper with solutions...")
+    result = compare_answers(question_data, solution_data)
 
-    # Save processed data to GitHub
-    os.system("git add data && git commit -m 'Updated data' && git push origin main")
-    st.success("Data saved to GitHub!")
+    # Display results
+    st.write("Analysis Complete!")
+    st.json(result)  # Show results in JSON format
+
+    # Save results to GitHub
+    st.write("Saving results to GitHub...")
+    from utils.api_helpers import save_to_github
+    save_to_github("data/output.json", result)
+    st.success("Results saved to GitHub!")
