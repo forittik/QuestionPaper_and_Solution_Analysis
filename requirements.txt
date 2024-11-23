@@ -1,0 +1,6 @@
+streamlit
+fitz
+pillow
+google-generativeai
+openai
+pandas
