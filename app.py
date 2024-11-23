@@ -4,6 +4,7 @@ from utils.image_processing import process_images
 from utils.api_helpers import call_google_model, call_openai_model
 from utils.data_helpers import compare_answers
 
+
 # Title and description
 st.title("Question Paper and Solution Analysis")
 st.write("Upload question paper and solution PDFs to analyze and compare!")
