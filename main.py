@@ -73,7 +73,5 @@ def main():
         st.subheader("Extracted Solutions")
         st.write(solution_text)
 
-        # You can further implement data processing, comparisons, etc., here
-
 if __name__ == "__main__":
     main()
