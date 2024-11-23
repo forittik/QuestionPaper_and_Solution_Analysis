@@ -4,7 +4,8 @@ from utils.image_processing import process_image
 from utils.api_helpers import call_google_model, call_openai_model
 from utils.data_helpers import compare_answers, generate_student_responses
 import os
-from frontend import *
+from utils.pdf_to_image import pdf_to_jpeg
+
 st.title("Question Paper & Solution Analysis")
 
 # File inputs for question paper and solution PDFs
