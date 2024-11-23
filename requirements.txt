@@ -1,9 +1,8 @@
 streamlit
-fitz
-pymupdf
 google-generativeai
 openai
 pandas
 torch
 markdown
+pdf2image
 Pillow
