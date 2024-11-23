@@ -1,17 +1,20 @@
-import json
-
-def compare_answers(student_answers, correct_answers):
-    """Compare student answers with correct answers."""
-    results = {}
-    for qid, answer in student_answers.items():
-        results[qid] = {
-            "student": answer,
-            "correct": correct_answers.get(qid, "N/A"),
-            "is_correct": answer == correct_answers.get(qid)
-        }
-    return results
-
-def generate_student_responses(data):
-    """Generate structured responses."""
-    # Add logic for parsing/generating student responses
-    return json.dumps(data, indent=2)
+def compare_answers(question_data, solution_data):
+    """Compare questions and solutions."""
+    # Dummy comparison logic (replace with real implementation)
+    comparison = {"matches": 0, "errors": 0}
+    for q, s in zip(question_data, solution_data):
+        if q["content"] == s["content"]:
+            comparison["matches"] += 1
+        else:
+            comparison["errors"] += 1
+    return comparison
+def compare_answers(question_data, solution_data):
+    """Compare questions and solutions."""
+    # Dummy comparison logic (replace with real implementation)
+    comparison = {"matches": 0, "errors": 0}
+    for q, s in zip(question_data, solution_data):
+        if q["content"] == s["content"]:
+            comparison["matches"] += 1
+        else:
+            comparison["errors"] += 1
+    return comparison
