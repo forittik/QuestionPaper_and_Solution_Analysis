@@ -1,18 +1,13 @@
-from pdf2image import convert_from_path
+from pdf2image import convert_from_bytes
 from PIL import Image
 import os
 
-def pdf_to_jpeg(pdf_path, output_folder="output_images"):
-    """Convert a PDF file to JPEG images."""
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    
-    images = convert_from_path(pdf_path, dpi=300)  # Adjust DPI for quality
+def pdf_to_images(pdf_file):
+    """Convert PDF to a list of images."""
+    images = convert_from_bytes(pdf_file.read())
     image_paths = []
-    
-    for i, image in enumerate(images):
-        output_path = os.path.join(output_folder, f"page_{i + 1}.jpeg")
-        image.save(output_path, "JPEG")
-        image_paths.append(output_path)
-    
+    for i, img in enumerate(images):
+        path = f"data/page_{i + 1}.jpg"
+        img.save(path, "JPEG")
+        image_paths.append(path)
     return image_paths
