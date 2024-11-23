@@ -5,3 +5,4 @@ google-generativeai
 openai
 pandas
 PyMuPDF==1.22.5
+pdf2image==1.16.3
