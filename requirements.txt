@@ -1,5 +1,10 @@
 streamlit
-pdf2image
-Pillow
-PyGithub
-poppler-utils
+fitz
+pymupdf
+PIL
+google-generativeai
+openai
+pandas
+torch
+textwrap
+markdown
