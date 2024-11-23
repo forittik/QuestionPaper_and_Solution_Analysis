@@ -1,14 +1,14 @@
-import PIL.Image
-from utils.api_helpers import call_google_model, call_openai_model
+from PIL import Image
+import numpy as np
+from utils.api_helpers import call_google_model
 
-def process_image(image_path, model_type):
-    img = PIL.Image.open(image_path)
+def process_image(image_path, api="google"):
+    """Process an image using the generative AI model."""
+    image = Image.open(image_path)
+    image_array = np.array(image)
 
-    if model_type == 'google':
-        response = call_google_model(img)
-    elif model_type == 'openai':
-        response = call_openai_model(img)
+    if api == "google":
+        response = call_google_model(image_array)
     else:
-        raise ValueError("Invalid model type")
-
+        raise ValueError("Unsupported API.")
     return response
