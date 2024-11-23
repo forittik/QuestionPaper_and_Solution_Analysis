@@ -1,10 +1,10 @@
 streamlit
 fitz
 pymupdf
-PIL
 google-generativeai
 openai
 pandas
 torch
 textwrap
 markdown
+Pillow
