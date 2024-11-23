@@ -1,5 +1,6 @@
 import streamlit as st
 import pathlib
+import os  # Import os module
 from utils.pdf_to_image import pdf_page_to_jpeg
 from utils.image_processing import process_image
 from utils.api_helpers import configure_google_api, configure_openai_api
@@ -13,10 +14,18 @@ def main():
     solution_pdf = st.file_uploader("Upload Solution PDF", type="pdf")
     
     if question_pdf and solution_pdf:
-        # Save the PDFs to a temporary directory
-        question_pdf_path = f"data/PDFs/{question_pdf.name}"
-        solution_pdf_path = f"data/PDFs/{solution_pdf.name}"
+        # Define the directory for saving PDFs
+        pdf_directory = "data/PDFs/"
 
+        # Check if the directory exists, if not, create it
+        if not os.path.exists(pdf_directory):
+            os.makedirs(pdf_directory)
+
+        # Define file paths for saving uploaded PDFs
+        question_pdf_path = f"{pdf_directory}{question_pdf.name}"
+        solution_pdf_path = f"{pdf_directory}{solution_pdf.name}"
+
+        # Save the PDFs to the specified directory
         with open(question_pdf_path, "wb") as f:
             f.write(question_pdf.read())
         
